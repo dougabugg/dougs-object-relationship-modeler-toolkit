@@ -21,8 +21,8 @@ pub enum DataType {
 pub type ModelId = u64;
 
 pub struct Model {
-    temp_id: ModelId,
-    fields: HashMap<String, DataType>,
+    id: ModelId,
+    fields: Vec<(String, DataType)>,
 }
 
 pub struct ModelField {
@@ -45,11 +45,40 @@ pub enum RelationKind {
 }
 
 pub struct ModelStore {
-    models: HashMap<ModelId, Model>,
-    paths: HashMap<String, ModelId>,
+    pub models: HashMap<ModelId, Model>,
+    pub models_count: u64,
+    pub paths: HashMap<String, ModelId>,
+    pub relations: HashMap<RelationId, RelationKind>,
+    pub relations_count: u64,
+    pub model_relations: HashMap<ModelId, Vec<RelationId>>,
 }
 
-pub struct RelationStore {
-    relations: HashMap<RelationId, RelationKind>,
-    model_map: HashMap<ModelId, Vec<RelationId>>,
+impl ModelStore {
+    fn new() -> Self {
+        ModelStore {
+            models: HashMap::new(),
+            models_count: 0,
+            paths: HashMap::new(),
+            relations: HashMap::new(),
+            relations_count: 0,
+            model_relations: HashMap::new(),
+        }
+    }
+    fn add_model<I>(&mut self, path: String, fields_iter: I) -> ModelId
+        where I: IntoIterator<Item=(String, DataType)>
+    {
+        // todo!();
+        let mut fields = Vec::new();
+        for (name, dt) in fields_iter {
+            todo!();
+        }
+        let id = self.models_count;
+        let mut model = Model {
+            id,
+            fields,
+        };
+        self.models_count = id + 1;
+        self.models.insert(id, model);
+        id
+    }
 }
